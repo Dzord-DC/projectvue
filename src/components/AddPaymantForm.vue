@@ -5,7 +5,11 @@
     </button>
     <div class="form" v-if="show">
       <input class="form-item" placeholder="Amount" v-model="amount" />
-      <input class="form-item" placeholder="Type" v-model="type" />
+      <select class="form-item" v-model="type" placeholder="Type">
+        <option v-for="option in categoryList" :key="option">
+          {{option}}
+        </option>
+      </select>
       <input class="form-item" placeholder="Date" v-model="date" />
       <button @click="onSaveClick" class="button">Сохранить</button>
     </div>
@@ -19,6 +23,10 @@ export default {
     lastID: {
       type: Number,
       default: 0
+    },
+    categoryList: {
+      type: Array,
+      default: () => []
     }
   },
   data () {

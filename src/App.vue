@@ -4,12 +4,15 @@
       <div class="header">My personal costs</div>
     </header>
     <main>
-      <add-paymant-form @emitName="addNewPayment" :lastID="id" />
+      Total Price: {{getFPV}}
+      <add-paymant-form @emitName="addNewPayment" :lastID="id" :categoryList="getCategoryList"/>
       <PaymantDisplay
-        :items="paymantList"
+        :items="paymantsList"
         @idCreated="idCreated"
         @idUpdate="idUpdate"
+        :numberPage="selectPage"
       />
+      <Pagination @selectPage="newSelectPage"/>
     </main>
   </div>
 </template>
@@ -17,41 +20,45 @@
 <script>
 import PaymantDisplay from './components/PaymantDisplay.vue'
 import AddPaymantForm from './components/AddPaymantForm.vue'
+import Pagination from './components/Pagination.vue'
+import { mapGetters, mapMutations } from 'vuex'
+
 export default {
   name: 'App',
   components: {
     PaymantDisplay,
-    AddPaymantForm
+    AddPaymantForm,
+    Pagination
   },
   data: () => ({
-    paymantList: [],
-    id: 0
+    id: 0,
+    selectPage: 1
   }),
+  computed: {
+    ...mapGetters([
+      'getPaymentsList',
+      'getCategoryList'
+    ]),
+    getFPV () {
+      return this.$store.getters.getPaymentsListFullPrice
+    },
+    paymantsList () {
+      return this.$store.getters.getPaymentsList
+    }
+  },
   methods: {
-    fetchData () {
-      return [
-        {
-          id: 1,
-          date: '28.03.2020',
-          type: 'Food',
-          amount: 169
-        },
-        {
-          id: 2,
-          date: '24.03.2020',
-          type: 'Transport',
-          amount: 360
-        },
-        {
-          id: 3,
-          date: '24.03.2020',
-          type: 'Food',
-          amount: 532
-        }
-      ]
+    ...mapMutations({
+      addData: 'setPaymontListData'
+    }),
+    methodName (date) {
+      this.$store.commit('addDataToPaymentsList', date)
     },
     addNewPayment (date) {
-      this.paymantList.push(date)
+      this.paymantsList.push(date)
+    },
+    newSelectPage (namberPage) {
+      this.$store.dispatch('fetchData', namberPage)
+      this.selectPage = namberPage
     },
     idCreated (idItem) {
       this.id = idItem + 1
@@ -61,7 +68,8 @@ export default {
     }
   },
   created () {
-    this.paymantList = this.fetchData()
+    this.$store.dispatch('fetchData', 1)
+    this.$store.dispatch('fetchCategoryList')
   }
 }
 </script>
