@@ -1,71 +1,65 @@
 <template>
   <div id="app">
-    <header>
-      <div class="header">My personal costs</div>
+    <header class="header">
+      <router-link to="/dashboard">dashboard</router-link>
+      <router-link to="/about">about</router-link>
+      <div @click="goToPage('NotFound')">404</div>
+      <a class="quickadd" href="/add/payment/Food?value=200">Food</a>
+      <a class="quickadd" href="/add/payment/Transport">Transport</a>
+      <a class="quickadd" href="/add/payment/?value=300">Sport</a>
+      <!-- <a href="dashboard">dashboard</a>
+      <a href="about" >about</a>
+      <a href="notfound" >not found</a>-->
     </header>
     <main>
-      Total Price: {{getFPV}}
-      <add-paymant-form @emitName="addNewPayment" :lastID="id" :categoryList="getCategoryList"/>
-      <PaymantDisplay
-        :items="paymantsList"
-        @idCreated="idCreated"
-        @idUpdate="idUpdate"
-        :numberPage="selectPage"
-      />
-      <Pagination @selectPage="newSelectPage"/>
-    </main>
+      <router-view />
+      <!-- <Dashboard v-if="page === 'dashboard'" />
+      <About v-if="page === 'about'"/>
+      <NotFound v-if="page === 'notfound'"/> -->
+      </main>
   </div>
 </template>
 
 <script>
-import PaymantDisplay from './components/PaymantDisplay.vue'
-import AddPaymantForm from './components/AddPaymantForm.vue'
-import Pagination from './components/Pagination.vue'
-import { mapGetters, mapMutations } from 'vuex'
+// import About from './views/About.vue'
+// import Dashboard from './views/Dashboard.vue'
+// import NotFound from './views/NotFound.vue'
 
 export default {
   name: 'App',
   components: {
-    PaymantDisplay,
-    AddPaymantForm,
-    Pagination
+    // Dashboard,
+    // NotFound,
+    // About
   },
   data: () => ({
-    id: 0,
-    selectPage: 1
+    // page: 'dashboard'
   }),
   computed: {
-    ...mapGetters([
-      'getPaymentsList',
-      'getCategoryList'
-    ]),
-    getFPV () {
-      return this.$store.getters.getPaymentsListFullPrice
-    },
-    paymantsList () {
-      return this.$store.getters.getPaymentsList
-    }
   },
   methods: {
-    ...mapMutations({
-      addData: 'setPaymontListData'
-    }),
-    methodName (date) {
-      this.$store.commit('addDataToPaymentsList', date)
+    goToPage (namePage) {
+      this.$router.push({
+        name: namePage
+      })
     },
-    addNewPayment (date) {
-      this.paymantsList.push(date)
-    },
-    newSelectPage (namberPage) {
-      this.$store.dispatch('fetchData', namberPage)
-      this.selectPage = namberPage
-    },
-    idCreated (idItem) {
-      this.id = idItem + 1
-    },
-    idUpdate (idItem) {
-      this.id = idItem + 1
+    setPage () {
+      // this.page = location.pathname.slice(1)
     }
+  },
+  mounted () {
+    /* const links = document.querySelectorAll('a')
+    links.forEach(link => {
+      link.addEventListener('click', event => {
+        event.preventDefault()
+        history.pushState({}, '', link.href)
+        this.setPage()
+      })
+    })
+    this.setPage()
+    window.addEventListener('popstate', () => {
+      this.setPage()
+    }) */
   },
   created () {
     this.$store.dispatch('fetchData', 1)
@@ -85,5 +79,9 @@ export default {
 }
 .header {
   color: red;
+  & a {
+  text-decoration: none;
+  padding: 20px;
+  }
 }
 </style>
