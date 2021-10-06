@@ -23,10 +23,6 @@ export default {
     lastID: {
       type: Number,
       default: 0
-    },
-    categoryList: {
-      type: Array,
-      default: () => []
     }
   },
   data () {
@@ -39,6 +35,9 @@ export default {
     }
   },
   computed: {
+    categoryList () {
+      return this.$store.getters.getCategoryList
+    },
     getCurrentDate () {
       const today = new Date()
       const d = today.getDate()
@@ -55,7 +54,11 @@ export default {
         type: this.type,
         date: this.date || this.getCurrentDate
       }
-      this.$emit('emitName', data)
+      this.addDate(data)
+      // this.$emit('emitName', data)
+    },
+    addDate (data) {
+      this.$store.commit('addDataToPaymentsList', data)
     }
   },
   created () {

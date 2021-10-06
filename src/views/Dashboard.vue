@@ -2,7 +2,7 @@
   <div>
       <div class="header">My personal costs</div>
        Total Price: {{getFPV}}
-      <add-paymant-form @emitName="addNewPayment" :lastID="id" :categoryList="getCategoryList"/>
+      <!--<add-paymant-form @emitName="addNewPayment" :lastID="id" :categoryList="getCategoryList"/>-->
       <PaymantDisplay
         :items="paymantsList"
         @idCreated="idCreated"
@@ -10,16 +10,18 @@
         :numberPage="selectPage"
       />
       <Pagination @selectPage="newSelectPage"/>
+      <button @click="addPayment"> Add Payment</button>
   </div>
 </template>
 
 <script>
-import AddPaymantForm from '../components/AddPaymantForm.vue'
+// import AddPaymantForm from '../components/AddPaymantForm.vue'
 import Pagination from '../components/Pagination.vue'
 import PaymantDisplay from '../components/PaymantDisplay.vue'
 import { mapGetters, mapMutations } from 'vuex'
+
 export default {
-  components: { AddPaymantForm, Pagination, PaymantDisplay },
+  components: { Pagination, PaymantDisplay },
   name: 'Dashboard',
   data: () => ({
     id: 0,
@@ -27,8 +29,8 @@ export default {
   }),
   computed: {
     ...mapGetters([
-      'getPaymentsList',
-      'getCategoryList'
+      'getPaymentsList'
+      // 'getCategoryList'
     ]),
     getFPV () {
       return this.$store.getters.getPaymentsListFullPrice
@@ -41,9 +43,6 @@ export default {
     ...mapMutations({
       addData: 'setPaymontListData'
     }),
-    methodName (date) {
-      this.$store.commit('addDataToPaymentsList', date)
-    },
     addNewPayment (date) {
       this.paymantsList.push(date)
     },
@@ -56,6 +55,9 @@ export default {
     },
     idUpdate (idItem) {
       this.id = idItem + 1
+    },
+    addPayment () {
+      this.$modal.show({ title: 'Add Payment Form', content: 'addPaymentForm' })
     }
   },
   created () {
