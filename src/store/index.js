@@ -50,6 +50,13 @@ export default new Vuex.Store({
       const uniqIds = newUniqObjs.map(obj => obj.id)
       state.paymentsListId.push(...uniqIds)
       state.paymentsList.push(...newUniqObjs)
+    },
+    deleteDataToPaymentlist (state, id) {
+      console.log(id)
+      state.paymentsList.splice(id, 1)
+    },
+    reditDateToPaymentList (state, id, data) {
+      state.paymentsList.splice(id, 1, data)
     }
   },
   getters: {
