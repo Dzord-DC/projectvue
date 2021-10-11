@@ -2,8 +2,10 @@
   <div id="app">
     <header class="header">
       <router-link to="/dashboard">dashboard</router-link>
+      <router-link to="/calc">Calc</router-link>
       <router-link to="/about">about</router-link>
       <router-link to="/notfound">notFound</router-link>
+      <br>
       <a class="quickadd" href="/add/payment/Food?value=200">Food</a>
       <a class="quickadd" href="/add/payment/Transport">Transport</a>
       <a class="quickadd" href="/add/payment/?value=300">Sport</a>
@@ -19,11 +21,13 @@
       </main>
       <transition name="fade">
       <modal-window-add-payment @close="onModelClose" v-if="modalIsShow" :settings="modalSettings"/>
+      <contex-menu @closeContext="onContextClose" v-if="contextShow" :id="id"/>
       </transition>
   </div>
 </template>
 
 <script>
+import ContexMenu from './components/ContexMenu.vue'
 // import About from './views/About.vue'
 // import Dashboard from './views/Dashboard.vue'
 // import NotFound from './views/NotFound.vue'
@@ -32,12 +36,14 @@
 export default {
   name: 'App',
   components: {
-    ModalWindowAddPayment: () => import('./components/ModalWindowAddPayment.vue')
+    ModalWindowAddPayment: () => import('./components/ModalWindowAddPayment.vue'),
+    ContexMenu
   },
   data: () => ({
     modalSettings: {},
-    modalIsShow: false
-    // page: 'dashboard'
+    modalIsShow: false,
+    contextShow: false,
+    id: 0
   }),
   computed: {
   },
@@ -54,19 +60,26 @@ export default {
       // this.page = location.pathname.slice(1)
     },
     onShown (settings) {
-      // console.log(settings)
       this.modalSettings = settings
       this.modalIsShow = true
     },
     onHide () {
-      console.log('hide')
       this.modalIsShow = false
       this.modalSettings = {}
+    },
+    onContextShow (idItem) {
+      this.contextShow = true
+      this.id = idItem
+    },
+    onContextClose () {
+      this.contextShow = false
     }
   },
   mounted () {
     this.$modal.EventBus.$on('onShown', this.onShown)
     this.$modal.EventBus.$on('onHide', this.onHide)
+    this.$context.EventBus.$on('openContext', this.onContextShow)
+    this.$context.EventBus.$on('closeContext', this.onContextClose)
     /* const links = document.querySelectorAll('a')
     links.forEach(link => {
       link.addEventListener('click', event => {
@@ -103,7 +116,7 @@ export default {
   color: red;
   & a {
   text-decoration: none;
-  padding: 20px;
+  margin: 20px;
   }
 }
 .fade-enter-active, .fade-leave-active {

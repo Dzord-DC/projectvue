@@ -26,6 +26,11 @@ const router = new Router({
       component: () => import(/* webpackChunkName: "PageDashBoard" */'../views/Dashboard.vue')
     },
     {
+      path: '/calc',
+      name: 'Calculator',
+      component: () => import(/* webpackChunkName: "PageDashBoard" */'../views/Calculete.vue')
+    },
+    {
       path: '/about',
       name: 'About',
       component: () => import(/* webpackChunkName: "PageAbout" */'../views/About.vue')
