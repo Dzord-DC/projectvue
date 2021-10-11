@@ -2,6 +2,7 @@
   <div id="app">
     <header class="header">
       <router-link to="/dashboard">dashboard</router-link>
+      <router-link to="/calc">Calc</router-link>
       <router-link to="/about">about</router-link>
       <router-link to="/notfound">notFound</router-link>
       <br>

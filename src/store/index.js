@@ -67,6 +67,9 @@ export default new Vuex.Store({
     getCategoryList: state => state.categoryList
   },
   actions: {
+    addDate ({ commit }, payload) {
+      console.log(commit, payload)
+    },
     /* fetchData ({ commit }) {
       return new Promise(resolve => {
         setTimeout(() => {
