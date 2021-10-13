@@ -5,13 +5,13 @@
         type="number"
         v-model.number="op1"
         @input="result = ''"
-        @click="swit = 'one'" name="operand1"
+        @click="swit = '1'" name="operand1"
       />
       <input
         type="number"
         v-model.number="op2"
         @input="result = ''"
-        @click="swit = 'two'" name="operand2"
+        @click="swit = '2'" name="operand2"
       />
       ={{ result }}
     </div>
@@ -33,27 +33,27 @@
           type="radio"
           v-model="swit"
           id="field1"
-          value="one"
-          name="switch"
+          value="1"
+          name="switch1"
         />
         <label for="field1">1 поле</label>
         <input
           type="radio"
           v-model="swit"
           id="field2"
-          value="two"
-          name="switch"
+          value="2"
+          name="switch2"
         />
         <label for="field2">2 поле</label>
         <br />
-        <input type="checkbox" v-model="showKey" id="showKey" />
+        <input type="checkbox" v-model="showKey" id="showKey" name="showKey"/>
         <label for="showKey">Клавиатура</label>
       </div>
-      <div v-if="showKey" class="keypad">
+      <div v-show="showKey" class="keypad">
         <button
           v-for="(item, index) in keyPad"
           :key="index"
-          @click="inputCheng(item)"
+          @click="inputCheng(item)" :name="'key'+ index"
         >
           {{ item }}
         </button>
@@ -70,7 +70,7 @@ export default {
       op1: '',
       op2: '',
       result: '',
-      swit: 'one',
+      swit: '1',
       showKey: false,
       field: '',
       keyPad: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, '<', 'c']
@@ -78,7 +78,7 @@ export default {
   },
   methods: {
     inputCheng (item) {
-      if (this.swit === 'one') {
+      if (this.swit === '1') {
         this.op1 = this.redactor(item, this.op1)
       } else {
         this.op2 = this.redactor(item, this.op2)
@@ -130,11 +130,7 @@ export default {
     },
     div () {
       const { op1, op2 } = this
-      if (op2 === 0) {
-        this.result = 'На ноль делить нельзя'
-      } else {
-        this.result = op1 / op2
-      }
+      this.result = op1 / op2
     },
     deg () {
       const { op1, op2 } = this
