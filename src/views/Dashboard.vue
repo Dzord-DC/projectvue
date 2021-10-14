@@ -1,17 +1,24 @@
 <template>
-  <div>
-      <div class="header">My personal costs</div>
-       Total Price: {{getFPV}}
-      <!--<add-paymant-form @emitName="addNewPayment" :lastID="id" :categoryList="getCategoryList"/>-->
-      <PaymantDisplay
-        :items="paymantsList"
-        @idCreated="idCreated"
+<v-container>
+  <v-row>
+    <v-col>
+      <div class="text-h5 text-sm-h3"> My personal costs</div>
+       <v-dialog v-model="dialog" width="500">
+        <template v-slot:activator="{ on }">
+        <v-btn color="teal" dark v-on="on" @click="dialog=!dialog"> Add new cost<v-icon> mdi-plus</v-icon></v-btn>
+        </template>
+        <v-card>
+          <add-paymant-form :lastID="id"/>
+        </v-card>
+      </v-dialog>
+      <PaymantDisplay show-items :items="paymantsList" @idCreated="idCreated"
         @idUpdate="idUpdate"
         :numberPage="selectPage"
       />
-      <Pagination @selectPage="newSelectPage"/>
-      <button @click="addPayment"> Add Payment</button>
-  </div>
+    </v-col>
+  </v-row>
+  <Pagination @selectPage="newSelectPage" :filterNum="filterNum"/>
+</v-container>
 </template>
 
 <script>
@@ -19,11 +26,13 @@
 import Pagination from '../components/Pagination.vue'
 import PaymantDisplay from '../components/PaymantDisplay.vue'
 import { mapGetters, mapMutations } from 'vuex'
+import AddPaymantForm from '../components/AddPaymantForm.vue'
 
 export default {
-  components: { Pagination, PaymantDisplay },
+  components: { Pagination, PaymantDisplay, AddPaymantForm },
   name: 'Dashboard',
   data: () => ({
+    dialog: false,
     id: 0,
     selectPage: 1
   }),
@@ -32,11 +41,11 @@ export default {
       'getPaymentsList'
       // 'getCategoryList'
     ]),
-    getFPV () {
-      return this.$store.getters.getPaymentsListFullPrice
-    },
     paymantsList () {
       return this.$store.getters.getPaymentsList
+    },
+    filterNum () {
+      return Math.floor(this.paymantsList.length / 3 + 1)
     }
   },
   methods: {
@@ -47,7 +56,7 @@ export default {
       this.paymantsList.push(date)
     },
     newSelectPage (namberPage) {
-      this.$store.dispatch('fetchData', namberPage)
+      // this.$store.dispatch('fetchData', namberPage)
       this.selectPage = namberPage
     },
     idCreated (idItem) {
@@ -61,7 +70,8 @@ export default {
     }
   },
   created () {
-    this.$store.dispatch('fetchData', 1)
+    // this.$store.dispatch('fetchData', 1)
+    this.$store.dispatch('fetchData')
     this.$store.dispatch('fetchCategoryList')
   }
 }
