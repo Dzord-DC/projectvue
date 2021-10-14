@@ -1,5 +1,12 @@
 <template>
-  <div>
+<v-card class="text-left pa-8">
+  <v-text-field v-model="date" label="Date"/>
+  <v-select v-model="type" label="Category" :items="categoryList" />
+  <v-text-field v-model="amount" label="Value"/>
+
+  <v-btn @click="onSaveClick">Save</v-btn>
+</v-card>
+  <!--<div>
     <button @click="show = !show" class="button b-show">
       Добавить запись +
     </button>
@@ -13,7 +20,7 @@
       <input class="form-item" placeholder="Date" v-model="date" />
       <button @click="onSaveClick" class="button">Сохранить</button>
     </div>
-  </div>
+  </div>-->
 </template>
 
 <script>

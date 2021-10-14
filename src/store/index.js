@@ -70,7 +70,7 @@ export default new Vuex.Store({
     addDate ({ commit }, payload) {
       console.log(commit, payload)
     },
-    /* fetchData ({ commit }) {
+    fetchData ({ commit }) {
       return new Promise(resolve => {
         setTimeout(() => {
           resolve([
@@ -97,8 +97,8 @@ export default new Vuex.Store({
       }).then(res => {
         commit('setPaymontListData', res)
       })
-    }, */
-    fetchData ({ commit }, page) {
+    },
+    /* fetchData ({ commit }, page) {
       return new Promise(resolve => {
         setTimeout(() => {
           const items = dataBase[`page${page}`]
@@ -107,7 +107,7 @@ export default new Vuex.Store({
       }).then(res => {
         commit('addPaymentsListData', res)
       })
-    },
+    }, */
     fetchCategoryList ({ commit }) {
       return new Promise(resolve => {
         setTimeout(() => {
